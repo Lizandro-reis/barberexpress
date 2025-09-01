@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barber Express - Agendamento Online</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h1>Barber Express</h1>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="#home" class="nav-link active">Início</a>
+                <a href="#services" class="nav-link">Serviços</a>
+                <a href="#barbers" class="nav-link">Barbeiros</a>
+                <a href="#contact" class="nav-link">Contato</a>
+            </div>
+            <div class="nav-auth" id="navAuth">
+                <button class="btn-secondary" id="loginBtn">Entrar</button>
+                <button class="btn-primary" id="registerBtn">Cadastrar</button>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Bem-vindo à Barber Express</h1>
+                <p class="hero-subtitle">Agende seu corte com os melhores barbeiros da cidade</p>
+                <button class="btn-cta" id="ctaBtn">Agendar Agora</button>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Barbearia moderna">
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="services-section">
+            <div class="container">
+                <h2 class="section-title">Nossos Serviços</h2>
+                <div class="services-grid" id="servicesGrid">
+                    {% for servico in servicos %}
+                    <div class="service-card" data-service-id="{{ servico.id }}">
+                        <h3>{{ servico.nome }}</h3>
+                        <p>{{ servico.descricao }}</p>
+                        <div class="service-price">R$ {{ "%.2f"|format(servico.preco) }}</div>
+                        <div class="service-duration">{{ servico.duracao }} min</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <!-- Barbers Section -->
+        <section id="barbers" class="barbers-section">
+            <div class="container">
+                <h2 class="section-title">Nossa Equipe</h2>
+                <div class="barbers-grid" id="barbersGrid">
+                    {% for barbeiro in barbeiros %}
+                    <div class="barber-card" data-barber-id="{{ barbeiro.id }}">
+                        <img src="{{ barbeiro.imagem }}" alt="{{ barbeiro.nome }}" class="barber-image">
+                        <div class="barber-info">
+                            <h3 class="barber-name">{{ barbeiro.nome }}</h3>
+                            <p class="barber-specialty">{{ barbeiro.especialidade }}</p>
+                            <div class="barber-rating">
+                                <span>⭐ {{ barbeiro.avaliacao }}</span>
+                                <span>•</span>
+                                <span>{{ barbeiro.experiencia }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <h2 class="section-title">Contato</h2>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <h3>Endereço</h3>
+                        <p>Rua das Flores, 123 - Centro<br>São Paulo, SP - 01234-567</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Telefone</h3>
+                        <p>(11) 99999-9999</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Horário de Funcionamento</h3>
+                        <p>Segunda a Sexta: 9h às 19h<br>Sábado: 8h às 17h</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Entrar na sua conta</h2>
+                <button class="modal-close" id="loginClose">&times;</button>
+            </div>
+            <form class="auth-form" id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">E-mail</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn-primary full-width">Entrar</button>
+                <p class="auth-switch">
+                    Não tem conta? <a href="#" id="switchToRegister">Cadastre-se</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Criar conta</h2>
+                <button class="modal-close" id="registerClose">&times;</button>
+            </div>
+            <form class="auth-form" id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Nome completo</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">E-mail</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPhone">Telefone</label>
+                    <input type="tel" id="registerPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Senha</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Confirmar senha</label>
+                    <input type="password" id="registerConfirmPassword" required>
+                </div>
+                <button type="submit" class="btn-primary full-width">Criar conta</button>
+                <p class="auth-switch">
+                    Já tem conta? <a href="#" id="switchToLogin">Entrar</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content booking-modal">
+            <div class="modal-header">
+                <h2>Fazer Agendamento</h2>
+                <button class="modal-close" id="bookingClose">&times;</button>
+            </div>
+            <div class="booking-steps">
+                <div class="step active" data-step="1">
+                    <span class="step-number">1</span>
+                    <span class="step-label">Serviço</span>
+                </div>
+                <div class="step" data-step="2">
+                    <span class="step-number">2</span>
+                    <span class="step-label">Barbeiro</span>
+                </div>
+                <div class="step" data-step="3">
+                    <span class="step-number">3</span>
+                    <span class="step-label">Data/Hora</span>
+                </div>
+                <div class="step" data-step="4">
+                    <span class="step-number">4</span>
+                    <span class="step-label">Confirmação</span>
+                </div>
+            </div>
+            <div class="booking-content" id="bookingContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+        <div class="spinner"></div>
+        <p>Carregando...</p>
+    </div>
+
+    <!-- Message Container -->
+    <div id="messageContainer"></div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
